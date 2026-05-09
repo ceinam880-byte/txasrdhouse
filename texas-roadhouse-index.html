@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Texas Roadhouse $250 Reward</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --maroon:#7B1D1D;--maroon-dark:#4A0E0E;
+      --gold:#C9920A;--gold-light:#F0B429;
+      --bg:#fff;--surface:#faf7f2;--border:#e8ddd0;
+      --gray:#6b5a4a;--text:#2C1810;
+    }
+    body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+    #toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(120px);background:#fff;border-left:3px solid var(--maroon);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;width:calc(100% - 28px);max-width:340px;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+    #toast.show{transform:translateX(-50%) translateY(0)}
+    .t-dot{width:8px;height:8px;border-radius:50%;background:var(--maroon);flex-shrink:0}
+    .t-name{font-weight:700;font-size:12px}
+    .t-msg{font-size:11px;color:var(--gray)}
+    .t-time{font-size:11px;color:var(--maroon);font-weight:600;white-space:nowrap;margin-left:auto}
+
+    .site-header{background:#fff;border-bottom:2px solid var(--maroon);padding:12px 20px;text-align:center}
+    .brand-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:var(--maroon);letter-spacing:.3px}
+    .brand-sub{font-size:11px;color:var(--gray);margin-top:1px}
+
+    .hero{background:var(--maroon-dark);padding:28px 20px 32px;text-align:center}
+    .hero-tag{display:inline-block;background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:4px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,32px);font-weight:700;color:rgba(255,255,255,.9);line-height:1.2;margin-bottom:6px}
+    .hero h1 .amt{font-size:clamp(52px,14vw,80px);font-weight:800;display:block;line-height:1;color:#fff}
+    .hero p{color:rgba(255,255,255,.75);font-size:14px;line-height:1.5;margin-bottom:22px}
+
+    .voucher-card{background:#fff;border-radius:10px;padding:18px 20px;max-width:300px;margin:0 auto 22px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .vc-icon{font-size:34px;flex-shrink:0}
+    .vc-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+    .vc-amount{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--maroon);line-height:1}
+    .vc-type{font-size:11px;color:var(--gray);margin-top:2px}
+
+    .prog-wrap{max-width:320px;margin:0 auto 20px}
+    .prog-top{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.75);font-weight:600;margin-bottom:6px}
+    .prog-bg{background:rgba(255,255,255,.15);border-radius:999px;height:7px;overflow:hidden}
+    .prog-fill{height:100%;width:81%;background:var(--gold-light);border-radius:999px}
+
+    .cta-btn{display:block;width:100%;max-width:320px;margin:0 auto;background:var(--gold);color:#fff;font-family:'Lato',sans-serif;font-size:16px;font-weight:900;text-decoration:none;text-align:center;padding:15px 20px;border-radius:6px;letter-spacing:.3px;transition:opacity .2s}
+    .cta-btn:active{opacity:.85}
+    .cta-note{text-align:center;font-size:11px;color:rgba(255,255,255,.55);margin-top:8px}
+
+    .stats{display:flex;background:var(--surface);border-bottom:1px solid var(--border)}
+    .stat{flex:1;text-align:center;padding:12px 6px;border-right:1px solid var(--border)}
+    .stat:last-child{border-right:none}
+    .stat-n{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--maroon);display:block}
+    .stat-l{font-size:9px;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+
+    .body-section{padding:24px 20px}
+    .urgency{background:#fffbeb;border:1px solid var(--gold-light);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px;max-width:440px;margin:0 auto 20px;font-size:13px;font-weight:600;color:#7a4f00}
+    .urgency strong{color:var(--maroon)}
+    #cd{font-size:16px;font-weight:900;color:var(--maroon)}
+    .sec-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;text-align:center;color:var(--maroon-dark);margin-bottom:4px}
+    .sec-sub{text-align:center;color:var(--gray);font-size:13px;margin-bottom:16px}
+    .steps{display:flex;flex-direction:column;gap:10px;max-width:440px;margin:0 auto}
+    .step{background:var(--surface);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;border:1px solid var(--border)}
+    .step-n{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:var(--maroon);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .step h3{font-size:14px;font-weight:700;color:var(--maroon-dark);margin-bottom:2px}
+    .step p{font-size:12px;color:var(--gray);line-height:1.5}
+    .badges{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:440px;margin:16px auto 0}
+    .badge{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--text)}
+
+    .rv-section{padding:20px 0;background:#fff;border-top:1px solid var(--border)}
+    .rv-section .sec-title,.rv-section .sec-sub{padding:0 20px}
+    .marquee-outer{overflow:hidden;position:relative;padding:8px 0 10px}
+    .marquee-outer::before,.marquee-outer::after{content:'';position:absolute;top:0;bottom:0;width:40px;z-index:2;pointer-events:none}
+    .marquee-outer::before{left:0;background:linear-gradient(to right,#fff,transparent)}
+    .marquee-outer::after{right:0;background:linear-gradient(to left,#fff,transparent)}
+    .marquee-track{display:flex;flex-direction:row;flex-wrap:nowrap;gap:12px;width:max-content;animation:scrollLeft 26s linear infinite}
+    .marquee-track:hover{animation-play-state:paused}
+    @keyframes scrollLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .rv-card{background:var(--surface);border-radius:8px;padding:14px;border:1px solid var(--border);width:230px;flex-shrink:0}
+    .rv-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .rv-av{width:32px;height:32px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .rv-name{font-weight:700;font-size:13px}
+    .rv-loc{font-size:10px;color:var(--gray)}
+    .rv-stars{color:var(--gold);font-size:11px;margin-left:auto}
+    .rv-text{font-size:12px;color:#555;line-height:1.5}
+    .rv-badge{display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:7px}
+
+    .bottom{background:var(--maroon-dark);padding:24px 20px;text-align:center}
+    .bottom h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px}
+    .bottom p{color:rgba(255,255,255,.75);font-size:13px;margin-bottom:16px}
+    footer{background:#1a0505;color:rgba(255,255,255,.4);padding:14px 18px;font-size:10px;line-height:1.6;text-align:center}
+    footer a{color:rgba(255,255,255,.5)}
+  </style>
+</head>
+<body>
+
+<div id="toast">
+  <div class="t-dot"></div>
+  <div style="flex:1"><div class="t-name" id="tname">Jessica M. from Texas</div><div class="t-msg">just claimed their $250 Texas Roadhouse reward</div></div>
+  <div class="t-time" id="ttime">Just now</div>
+</div>
+
+<div class="site-header">
+  <div class="brand-name">Texas Roadhouse Rewards</div>
+</div>
+
+<section class="hero">
+  <div class="hero-tag">Limited Time Offer</div>
+  <h1>Claim Your<span class="amt">$250</span>Dining Voucher</h1>
+  <p>Answer a few quick questions and unlock your free Texas Roadhouse dining reward</p>
+<div>
+      <div class="vc-label">Reward Voucher</div>
+      <div class="vc-amount">$250</div>
+      <div class="vc-type">Texas Roadhouse Credit</div>
+    </div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-top"><span>Vouchers Remaining</span><span>42 left</span></div>
+    <div class="prog-bg"><div class="prog-fill"></div></div>
+  </div>
+  <a href="https://giftclick.org/aff_c?offer_id=4595&aff_id=163616" class="cta-btn">Claim My $250 Voucher</a>
+  <div class="cta-note">🔒 Free · No purchase required · US only</div>
+</section>
+
+<div class="stats">
+  <div class="stat"><span class="stat-n" id="sc">73,512</span><span class="stat-l">Rewarded</span></div>
+  <div class="stat"><span class="stat-n">$250</span><span class="stat-l">Value</span></div>
+  <div class="stat"><span class="stat-n">4.9★</span><span class="stat-l">Rating</span></div>
+</div>
+
+<section class="body-section">
+  <div class="urgency"><span>⏰</span><span>Expires in <strong><span id="cd">14:59</span></strong> — claim before someone else takes it</span></div>
+  <div class="sec-title">How It Works</div>
+  <div class="sec-sub">3 quick steps</div>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div><h3>Tap Claim and Answer a Few Questions</h3><p>Quick questions to unlock your reward slot.</p></div></div>
+    <div class="step"><div class="step-n">2</div><div><h3>Complete 4 to 6 Partner Deals</h3><p>Random tasks like surveys, forms, or app tests. All quick and easy.</p></div></div>
+    <div class="step"><div class="step-n">3</div><div><h3>Receive Your $250 Voucher</h3><p>Unlocks instantly. Use it at any Texas Roadhouse location.</p></div></div>
+  </div>
+  <div class="badges">
+    <div class="badge">🔒 Secure</div>
+    <div class="badge">🇺🇸 USA Only</div>
+    <div class="badge">✅ No Credit Card</div>
+    <div class="badge">⚡ Instant</div>
+    <div class="badge">🎁 Free</div>
+  </div>
+</section>
+
+<section class="rv-section">
+  <div class="sec-title">What Members Say</div>
+  <div class="sec-sub">Real people, real rewards</div>
+  <div class="marquee-outer">
+    <div class="marquee-track">
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">S</div><div><div class="rv-name">Sarah K.</div><div class="rv-loc">📍 Nashville, TN</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Anniversary dinner at Texas Roadhouse was totally covered. Staff were great and food was amazing!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">M</div><div><div class="rv-name">Marcus T.</div><div class="rv-loc">📍 Dallas, TX</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Best free steak I ever had. Tasks were simple and reward came quickly. Totally worth it!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">L</div><div><div class="rv-name">Linda R.</div><div class="rv-loc">📍 Kansas City, MO</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Whole family ate at Texas Roadhouse. Voucher covered everything. Kids had a blast!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">T</div><div><div class="rv-name">Tyler H.</div><div class="rv-loc">📍 San Antonio, TX</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Real deal. Voucher arrived same day. Rolls and ribeye on the house. Cannot complain!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">A</div><div><div class="rv-name">Ashley N.</div><div class="rv-loc">📍 Oklahoma City, OK</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Tasks took 15 minutes tops. Reward arrived fast and worked perfectly at checkout!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">R</div><div><div class="rv-name">Rachel G.</div><div class="rv-loc">📍 Louisville, KY</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Great experience. Voucher was easy to use and staff helped right away. Loved it!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">S</div><div><div class="rv-name">Sarah K.</div><div class="rv-loc">📍 Nashville, TN</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Anniversary dinner at Texas Roadhouse was totally covered. Staff were great and food was amazing!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">M</div><div><div class="rv-name">Marcus T.</div><div class="rv-loc">📍 Dallas, TX</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Best free steak I ever had. Tasks were simple and reward came quickly. Totally worth it!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">L</div><div><div class="rv-name">Linda R.</div><div class="rv-loc">📍 Kansas City, MO</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Whole family ate at Texas Roadhouse. Voucher covered everything. Kids had a blast!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">T</div><div><div class="rv-name">Tyler H.</div><div class="rv-loc">📍 San Antonio, TX</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Real deal. Voucher arrived same day. Rolls and ribeye on the house. Cannot complain!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">A</div><div><div class="rv-name">Ashley N.</div><div class="rv-loc">📍 Oklahoma City, OK</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Tasks took 15 minutes tops. Reward arrived fast and worked perfectly at checkout!"</div><span class="rv-badge">✅ $250 Received</span></div>
+      <div class="rv-card"><div class="rv-head"><div class="rv-av">R</div><div><div class="rv-name">Rachel G.</div><div class="rv-loc">📍 Louisville, KY</div></div><div class="rv-stars">★★★★★</div></div><div class="rv-text">"Great experience. Voucher was easy to use and staff helped right away. Loved it!"</div><span class="rv-badge">✅ $250 Received</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="bottom">
+  <h2>Only 42 Vouchers Left</h2>
+  <p>Claim yours before the timer runs out</p>
+  <a href="https://giftclick.org/aff_c?offer_id=4595&aff_id=163616" class="cta-btn" style="background:var(--gold);color:#fff">Claim My $250 Now</a>
+</div>
+
+<footer>
+  <p>This is an independent rewards promotion and participation may require completing qualifying offers through our partner network. Not affiliated with or endorsed by Texas Roadhouse Holdings LLC.</p>
+  <p style="margin-top:6px">© 2025 RewardHub &nbsp;·&nbsp; <a href="#">Terms</a> &nbsp;·&nbsp; <a href="#">Privacy</a></p>
+</footer>
+
+<script>
+  const names=[["Jessica M.","Texas"],["Brandon W.","Florida"],["Ashley N.","California"],["Tyler H.","Ohio"],["Samantha J.","Georgia"],["Michael R.","New York"],["Kayla D.","Arizona"],["Derek P.","Illinois"],["Brittany S.","Pennsylvania"],["Josh C.","Michigan"],["Amber L.","N. Carolina"],["Ryan F.","Tennessee"],["Megan O.","Washington"],["Kevin B.","Colorado"],["Nicole T.","Virginia"],["Chris A.","Oregon"],["Stephanie K.","Nevada"],["Aaron M.","Missouri"],["Rachel G.","Indiana"],["Justin V.","Wisconsin"]];
+  const times=["Just now","Just now","1 min ago","30 sec ago","2 mins ago"];
+  let ti=0;const toast=document.getElementById('toast');
+  function showToast(){const[n,s]=names[ti%names.length];ti++;document.getElementById('tname').textContent=n+' from '+s;document.getElementById('ttime').textContent=times[Math.floor(Math.random()*times.length)];toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3600)}
+  setTimeout(()=>{showToast();setInterval(showToast,5000)},1800);
+  let secs=14*60+59;const cdEl=document.getElementById('cd');
+  setInterval(()=>{if(secs<=0)secs=14*60+59;secs--;cdEl.textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0')},1000);
+  const scEl=document.getElementById('sc');let cur=65000;const spd=Math.ceil((73512-cur)/30);const tk=setInterval(()=>{cur=Math.min(cur+spd,73512);scEl.textContent=cur.toLocaleString();if(cur>=73512)clearInterval(tk)},50);
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}}),{threshold:.1});
+  document.querySelectorAll('.step').forEach(el=>{el.style.cssText+=';opacity:0;transform:translateY(14px);transition:opacity .4s ease,transform .4s ease';obs.observe(el)});
+</script>
+</body>
+</html>
