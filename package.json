@@ -1,0 +1,12 @@
+{
+  "name": "reward-lander",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Static site, no build needed'",
+    "start": "npx serve ."
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
